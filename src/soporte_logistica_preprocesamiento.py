@@ -105,7 +105,7 @@ class Visualizador:
         """
         return self.dataframe.select_dtypes(include=np.number), self.dataframe.select_dtypes(include=["O", "category"])
     
-    def plot_numericas(self, color="grey", tamano_grafica=(15, 5)):
+    def plot_numericas(self, color="grey", tamano_grafica=(20, 10)):
         """
         Grafica la distribución de las variables numéricas del DataFrame.
 
@@ -114,10 +114,11 @@ class Visualizador:
         - tamaño_grafica (tuple, opcional): El tamaño de la figura de la gráfica. Por defecto es (15, 5).
         """
         lista_num = self.separar_dataframes()[0].columns
-        fig, axes = plt.subplots(nrows = 2, ncols = math.ceil(len(lista_num)/2), figsize=tamano_grafica, sharey=True)
+        fig, axes = plt.subplots(ncols = 2, nrows = math.ceil(len(lista_num)/2), figsize=tamano_grafica, sharey=True)
         axes = axes.flat
         for indice, columna in enumerate(lista_num):
             sns.histplot(x=columna, data=self.dataframe, ax=axes[indice], color=color, bins=20)
+            axes[indice].set_title(f"Distribución de {columna}")
         plt.suptitle("Distribución de variables numéricas")
         plt.tight_layout()
 
@@ -125,7 +126,7 @@ class Visualizador:
             fig.delaxes(axes[-1])
 
 
-    def plot_categoricas(self, color="grey", tamano_grafica=(40, 10)):
+    def plot_categoricas(self, color="grey", tamano_grafica=(20, 10)):
         """
         Grafica la distribución de las variables categóricas del DataFrame.
 
@@ -134,7 +135,7 @@ class Visualizador:
         - tamaño_grafica (tuple, opcional): El tamaño de la figura de la gráfica. Por defecto es (15, 5).
         """
         lista_cat = self.separar_dataframes()[1].columns
-        fig, axes = plt.subplots(2, math.ceil(len(lista_cat) / 2), figsize=tamano_grafica)
+        fig, axes = plt.subplots(ncols = 2, nrows = math.ceil(len(lista_cat) / 2), figsize=tamano_grafica)
         axes = axes.flat
         for indice, columna in enumerate(lista_cat):
             sns.countplot(x=columna, data=self.dataframe, order=self.dataframe[columna].value_counts().index,
@@ -150,13 +151,13 @@ class Visualizador:
             fig.delaxes(axes[-1])
 
 
-    def plot_relacion(self, vr, tamano_grafica=(40, 12)):
+    def plot_relacion(self, vr, tamano_grafica=(20, 10)):
 
 
         lista_num = self.separar_dataframes()[0].columns
         lista_cat = self.separar_dataframes()[1].columns
 
-        fig, axes = plt.subplots(3, int(len(self.dataframe.columns) / 3), figsize=tamano_grafica)
+        fig, axes = plt.subplots(ncols = 2, nrows = math.ceil(len(self.dataframe.columns) / 2), figsize=tamano_grafica)
         axes = axes.flat
 
         for indice, columna in enumerate(self.dataframe.columns):
@@ -178,7 +179,7 @@ class Visualizador:
                               palette = "magma"
                               )
 
-            axes[indice].set_title(f"Relación {columna} vs {vr}")   
+            axes[indice].set_title(f"Relación {columna} vs {vr}",size=25)   
 
         plt.tight_layout()
     
@@ -199,7 +200,7 @@ class Visualizador:
 
         lista_num = self.separar_dataframes()[0].columns
 
-        fig, axes = plt.subplots(2, ncols = math.ceil(len(lista_num)/2), figsize=(15,5))
+        fig, axes = plt.subplots(ncols = 2, nrows = math.ceil(len(lista_num)/2), figsize=(20,10))
         axes = axes.flat
 
         for indice, columna in enumerate(lista_num):
@@ -207,6 +208,7 @@ class Visualizador:
                         ax=axes[indice], 
                         color=color, 
                         flierprops={'markersize': 4, 'markerfacecolor': 'orange'})
+            axes[indice].set_title(f"Outliers {columna}")  
 
         if len(lista_num) % 2 != 0:
             fig.delaxes(axes[-1])
